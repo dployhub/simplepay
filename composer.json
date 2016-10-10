@@ -14,7 +14,8 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Dploy\\Simplepay\\":"Dploy/Simplepay/src/"
+            "Dploy\\Simplepay\\":"src/",
+            "Dploy\\Simplepay\\Tests\\": "tests/"
         }
     }
 }

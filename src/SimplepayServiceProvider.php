@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Dploy\Simplepay;
 
 use Dploy\Simplepay\Simplepay;
@@ -14,8 +14,9 @@ class SimplepayServiceProvider extends ServiceProvider
     public function boot()
     {
         // Route
+        $path = 'simplepay.php';
         $this->publishes([
-            __DIR__.'/Config/simplepay.php' => config_path('simplepay.php'),
+            __DIR__.'/Config/simplepay.php' => app()->basePath() . '/config' . ($path ? '/' . $path : $path),
         ], 'config');
     }
 
@@ -27,9 +28,9 @@ class SimplepayServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom( __DIR__.'/Config/simplepay.php', 'simplepay');
-
-        $this->app->singleton('simplepay', function () {
-            return new Simplepay(); 
+        $config = config('simplepay');
+        $this->app->singleton('simplepay', function () use ($config) {
+            return new Simplepay($config);
         });
     }
 }
