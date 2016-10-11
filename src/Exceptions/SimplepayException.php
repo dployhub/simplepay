@@ -11,9 +11,9 @@ class SimplepayException extends Exception
   {
     $this->data = $data;
 
-    if ($data instanceof SimplepayRequest) {
+    if (is_a($data, 'Dploy\Simplepay\Models\SimplepayRequest')) {
       $this->errors = $data->getErrors();
-    } elseif ($data instanceof SimplepayResponse) {
+    } elseif (is_a($data, 'Dploy\Simplepay\Models\SimplepayResponse')) {
       $this->errors = [$data->getMessage()];
     } elseif (is_string($data)) {
       $this->errors = [$data];

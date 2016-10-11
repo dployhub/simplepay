@@ -65,6 +65,11 @@ class SimplepayResponse {
 		return $this->responseData;
 	}
 
+	public function toArray()
+	{
+		return json_decode($this->responseData, true);
+	}
+
 	public function __get($value)
 	{
 		return ($this->response && isset($this->response->$value)) ? $this->response->$value : null;
