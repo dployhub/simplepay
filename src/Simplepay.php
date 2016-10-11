@@ -4,6 +4,7 @@ namespace Dploy\Simplepay;
 use Dploy\Simplepay\Exceptions\SimplepayException;
 use Dploy\Simplepay\Models\SimplepayResponse;
 use Dploy\Simplepay\Models\SimplepayRequest;
+use Dploy\Simplepay\Models\CapturePreauthPaymentRequest;
 use Dploy\Simplepay\Models\CreateAsyncPaymentRequest;
 use Dploy\Simplepay\Models\CreateSyncPaymentRequest;
 use Dploy\Simplepay\Models\CreateRecurringPaymentRequest;
@@ -11,6 +12,8 @@ use Dploy\Simplepay\Models\CreateTokenRequest;
 use Dploy\Simplepay\Models\CreateTokenPaymentRequest;
 use Dploy\Simplepay\Models\DeleteTokenRequest;
 use Dploy\Simplepay\Models\GetPaymentStatusRequest;
+use Dploy\Simplepay\Models\RefundPaymentRequest;
+use Dploy\Simplepay\Models\ReversePaymentRequest;
 use BadMethodCallException;
 
 class Simplepay {
@@ -226,6 +229,107 @@ class Simplepay {
 		$request->recurringType = 'REPEATED';
 		$this->validateRequest($request);
 		$response = $this->curl_request('registrations/' . $request->registrationId . '/payments', 'POST', $request);
+		return $this->response($response);
+	}
+
+	/**
+	* Method for making a preauthorization request
+	* Requires:
+	* @param string userId
+	* @param string entityId
+	* @param string password
+	* @param float amount
+	* @param string currency
+	* @param string paymentBrand
+	* @param string paymentType
+	* @param int cardNumber
+	* @param string cardHolder
+	* @param int cardExpiryMonth
+	* @param int cardExpiryYear
+	* @param string cardcvv
+	*/
+	public function createPreauthPayment(CreateSyncPaymentRequest $request)
+	{
+		$request->paymentType = 'PA';
+		return $this->createSyncPayment($request);
+	}
+
+	/**
+	* Method for capturing a previously preauthorized payment
+	* Requires:
+	* @param string userId
+	* @param string entityId
+	* @param string password
+	* @param string id
+	* @param float amount
+	* @param string currency
+	* @param string paymentBrand
+	* @param string paymentType
+	*/
+	public function capturePreauthPayment(CapturePreauthPaymentRequest $request)
+	{
+		$request->paymentType = 'CP';
+		$this->validateRequest($request);
+		$response = $this->curl_request('payments/' . $request->id, 'POST', $request);
+		return $this->response($response);
+	}
+
+	/**
+	* Method for reversing / voiding a payment (e.g. preauthorization / debit)
+	* Requires:
+	* @param string userId
+	* @param string entityId
+	* @param string password
+	* @param string id
+	* @param string paymentType
+	*/
+	public function reversePayment(ReversePaymentRequest $request)
+	{
+		$request->paymentType = 'RV';
+		$this->validateRequest($request);
+		$response = $this->curl_request('payments/' . $request->id, 'POST', $request);
+		return $this->response($response);
+	}
+
+	/**
+	* Method for issuing a credit that is not associated to an existing payment
+	* Requires:
+	* @param string userId
+	* @param string entityId
+	* @param string password
+	* @param float amount
+	* @param string currency
+	* @param string paymentBrand
+	* @param string paymentType
+	* @param int cardNumber
+	* @param string cardHolder
+	* @param int cardExpiryMonth
+	* @param int cardExpiryYear
+	* @param string cardcvv
+	*/
+	public function issueCredit(IssueCreditRequest $request)
+	{
+		$request->paymentType = 'CD';
+		return $this->createSyncPayment($request);
+	}
+
+	/**
+	* Method for making a refund against an existing payment
+	* Requires:
+	* @param string userId
+	* @param string entityId
+	* @param string password
+	* @param string id
+	* @param float amount
+	* @param string currency
+	* @param string paymentBrand
+	* @param string paymentType
+	*/
+	public function refundPayment(RefundPaymentRequest $request)
+	{
+		$request->paymentType = 'RF';
+		$this->validateRequest($request);
+		$response = $this->curl_request('payments/' . $request->id, 'POST', $request);
 		return $this->response($response);
 	}
 
