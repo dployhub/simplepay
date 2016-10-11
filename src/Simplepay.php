@@ -12,6 +12,7 @@ use Dploy\Simplepay\Models\CreateTokenRequest;
 use Dploy\Simplepay\Models\CreateTokenPaymentRequest;
 use Dploy\Simplepay\Models\DeleteTokenRequest;
 use Dploy\Simplepay\Models\GetPaymentStatusRequest;
+use Dploy\Simplepay\Models\IssueCreditRequest;
 use Dploy\Simplepay\Models\RefundPaymentRequest;
 use Dploy\Simplepay\Models\ReversePaymentRequest;
 use BadMethodCallException;
