@@ -7,6 +7,7 @@ class SimplepayRequest {
   protected $errors;
   protected $data = [];
 	protected $validation = [];
+  protected $excludeFields = [];
 
 	public function __construct($params = [])
 	{
@@ -91,14 +92,16 @@ class SimplepayRequest {
 	{
 		$vars = [];
 		foreach($data as $k => $v) {
-			if (is_array($v)) {
-				$arr = $this->buildDataArray($v);
-				foreach($arr as $key => $value) {
-					$vars[$k . '.' . $key] = $value;
-				}
-			} else {
-				$vars[$k] = $v;
-			}
+      if (!in_array($k, $this->excludeFields)) {
+  			if (is_array($v)) {
+  				$arr = $this->buildDataArray($v);
+  				foreach($arr as $key => $value) {
+  					$vars[$k . '.' . $key] = $value;
+  				}
+  			} else {
+  				$vars[$k] = $v;
+  			}
+      }
 		}
 		return $vars;
 	}

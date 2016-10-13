@@ -8,4 +8,8 @@ class CreateTokenPaymentRequest extends SimplepayRequest {
     'registrationId', 'paymentType', 'currency', 'amount',
   ];
 
+  protected $excludeFields = [
+    'registrationId',
+  ];
+
 }

@@ -8,4 +8,8 @@ class DeleteTokenRequest extends SimplepayRequest {
     'registrationId',
   ];
 
+  protected $excludeFields = [
+    'registrationId',
+  ];
+
 }

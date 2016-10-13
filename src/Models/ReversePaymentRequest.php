@@ -8,4 +8,8 @@ class ReversePaymentRequest extends SimplepayRequest {
     'id', 'paymentType',
   ];
 
+  protected $excludeFields = [
+    'id',
+  ];
+
 }

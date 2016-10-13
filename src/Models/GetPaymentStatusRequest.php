@@ -8,4 +8,8 @@ class GetPaymentStatusRequest extends SimplepayRequest {
     'id',
   ];
 
+  protected $excludeFields = [
+    'id',
+  ];
+
 }

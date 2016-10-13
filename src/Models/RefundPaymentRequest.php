@@ -8,4 +8,8 @@ class RefundPaymentRequest extends SimplepayRequest {
     'id', 'paymentType', 'currency', 'amount',
   ];
 
+  protected $excludeFields = [
+    'id',
+  ];
+
 }

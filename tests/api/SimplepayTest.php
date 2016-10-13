@@ -68,7 +68,7 @@ class SimplepayTest extends TestBase
 
         $this->assertEquals($req->registrationId, '8a82944a576a798201576b139ad917bd');
         $this->assertEquals($req->validate(), true);
-        $this->assertEquals($req->toDataString(), 'registrationId=8a82944a576a798201576b139ad917bd');
+        $this->assertEquals($req->toDataString(), '');
 
         $req->registrationId = '';
         $this->assertEquals($req->validate(), false);
@@ -93,7 +93,7 @@ class SimplepayTest extends TestBase
 
         $this->assertEquals($req->registrationId, '8a82944a576a798201576b139ad917bd');
         $this->assertEquals($req->validate(), true);
-        $this->assertEquals($req->toDataString(), 'registrationId=8a82944a576a798201576b139ad917bd&paymentType=CP&currency=AUD&amount=10&merchantTransactionId=123456');
+        $this->assertEquals($req->toDataString(), 'paymentType=CP&currency=AUD&amount=10&merchantTransactionId=123456');
 
         $req->registrationId = '';
         $this->assertEquals($req->validate(), false);
