@@ -83,7 +83,7 @@ class Simplepay {
 				$data = $data->toDataString();
 			}
 
-			$this->log('info', $data);
+			$this->log('info', $this->sanitize($data));
 
 			$data = sprintf('authentication.userId=%s&authentication.password=%s&authentication.entityId=%s',
 				$this->config['userId'],
@@ -427,4 +427,34 @@ class Simplepay {
 	{
 		if ($this->log) $this->log->$severity($msg);
 	}
+
+  /**
+   * As per PCI compliance, we do not want to log any credit card numbers
+   */
+  protected function sanitize($data, $mask = 'X')
+  {
+    $qs = explode('&', $data);
+    $query = [];
+    foreach($qs as $q) {
+      list($k, $v) = explode('=', $q);
+      $query[$k] = $v;
+    }
+
+    $ccFields = ['card.number'];
+    foreach($ccFields as $field) {
+      if (isset($query[$field])) {
+        $query[$field] = $this->maskCc($query[$field]);
+      }
+    }
+    $parts = [];
+    foreach($query as $k => $v) {
+      $parts[] = implode('=', [$k, $v]);
+    }
+    return implode('&', $parts);
+  }
+
+  protected function maskCc($cc, $mask = 'X')
+  {
+    return substr($cc, 0, 4) . str_repeat($mask, strlen($cc) - 8) . substr($cc, -4);
+  }
 }
