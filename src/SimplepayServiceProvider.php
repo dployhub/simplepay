@@ -1,6 +1,7 @@
 <?php
 namespace Dploy\Simplepay;
 
+use Log;
 use Dploy\Simplepay\Simplepay;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,7 +31,7 @@ class SimplepayServiceProvider extends ServiceProvider
         $this->mergeConfigFrom( __DIR__.'/Config/simplepay.php', 'simplepay');
         $config = config('simplepay');
         $this->app->singleton('simplepay', function () use ($config) {
-            return new Simplepay($config);
+            return new Simplepay($config, Log::getMonolog());
         });
     }
 }

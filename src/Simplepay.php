@@ -1,6 +1,7 @@
 <?php
 namespace Dploy\Simplepay;
 
+use Monolog\Logger;
 use Dploy\Simplepay\Exceptions\SimplepayException;
 use Dploy\Simplepay\Models\SimplepayResponse;
 use Dploy\Simplepay\Models\SimplepayRequest;
@@ -15,7 +16,6 @@ use Dploy\Simplepay\Models\GetPaymentStatusRequest;
 use Dploy\Simplepay\Models\IssueCreditRequest;
 use Dploy\Simplepay\Models\RefundPaymentRequest;
 use Dploy\Simplepay\Models\ReversePaymentRequest;
-use BadMethodCallException;
 
 class Simplepay {
 
@@ -24,8 +24,9 @@ class Simplepay {
 	protected $version;
 	protected $env;
 	protected $ssl_verifier;
+	protected $log;
 
-	public function __construct($config = [])
+	public function __construct($config = [], Logger $log = null)
 	{
 		$this->config = $config;
 		$this->endpoints = [
@@ -35,6 +36,7 @@ class Simplepay {
 		$this->env = $config['environment'];
 		$this->version = $config['version'];
 		$this->ssl_verifier = $this->env == 'live';
+		$this->log = $log;
 	}
 
 	public function getEndpoint(){
@@ -73,11 +75,16 @@ class Simplepay {
 		$url = $this->getUrl() . '/' . $url;
 		$requestMethod = strtoupper($requestMethod);
 
+		$this->log('info', $requestMethod . ': ' . $url);
+
   	$ch = curl_init();
 		if ($requestMethod == 'POST') {
 			if ($data instanceof SimplepayRequest) {
 				$data = $data->toDataString();
 			}
+
+			$this->log('info', $data);
+
 			$data = sprintf('authentication.userId=%s&authentication.password=%s&authentication.entityId=%s',
 				$this->config['userId'],
         $this->config['password'],
@@ -410,8 +417,14 @@ class Simplepay {
 	{
 		$response = new SimplepayResponse($responseJson);
 		if ($response->isError()) {
+			$this->log('error', $responseJson);
 			throw new SimplepayException($response);
 		}
 		return $response;
+	}
+
+	protected function log($severity, $msg)
+	{
+		if ($this->log) $this->log->$severity($msg);
 	}
 }

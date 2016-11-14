@@ -11,7 +11,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+      "monolog/monolog": "~1.11"
+    },
     "autoload": {
         "psr-4": {
             "Dploy\\Simplepay\\":"src/",
