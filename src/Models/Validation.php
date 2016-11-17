@@ -86,7 +86,7 @@ class Validation {
 
   protected static function getValidateFuncName($key)
   {
-    return 'validate' . str_replace(' ', '', ucfirst(camel_case($key)));
+    return 'validate' . str_replace(' ', '', ucfirst(camel_case(str_replace('.', ' ', $key))));
   }
 
   protected static function validatePaymentBrand($value)
@@ -112,7 +112,7 @@ class Validation {
   protected static function validateCardCvv($value)
   {
     $len = strlen($value);
-    return ((string)(int)$value == (string)$value && $len > 2 && $len < 5);
+    return (preg_replace('/[^0-9]/', '', $value) == (string)$value && $len > 2 && $len < 5);
   }
 
   protected static function validateCardNumber($value)
