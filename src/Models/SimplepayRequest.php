@@ -11,8 +11,14 @@ class SimplepayRequest {
 
 	public function __construct($params = [])
 	{
-		foreach($params as $k => $v) {
-			$this->$k = $v;
+    foreach($params as $k => $v) {
+      switch($k) {
+        case 'amount':
+          $this->$k = number_format((float)$v, 2);
+          break;
+        default:
+  			   $this->$k = $v;
+      }
 		}
 	}
 
