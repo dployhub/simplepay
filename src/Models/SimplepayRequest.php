@@ -14,7 +14,7 @@ class SimplepayRequest {
     foreach($params as $k => $v) {
       switch($k) {
         case 'amount':
-          $this->$k = number_format((float)$v, 2);
+          $this->$k = preg_replace('@[^0-9\.]@', '', number_format((float)$v, 2));
           break;
         default:
   			   $this->$k = $v;
